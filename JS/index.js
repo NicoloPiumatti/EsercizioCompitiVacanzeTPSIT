@@ -1,6 +1,5 @@
 "use strict"
 
-
 // CREAZIONE DIV CONTAINER
 let container = document.createElement("div");
 container.classList.add("container", "mt-3");
@@ -11,7 +10,7 @@ let nave1 = ["3-9"];
 let nave2 = ["4-8", "5-8"];
 let nave3 = ["8-5", "8-6", "8-7"];
 let nave4 = ["4-1", "5-1", "6-1", "7-1"];
-let thHead = ["Partita numero" ,"Tentativi totali", "Tempo impiegato", "Colpi a segno", "Colpi mancati"];
+let thHead = ["Partita numero", "Tentativi totali", "Tempo impiegato", "Colpi a segno", "Colpi mancati"];
 
 // CREAZIONE VARIABILI
 let cntN1 = 0;
@@ -23,7 +22,6 @@ let tent = 0;
 let ore = 0, min = 0, sec = 0;
 let intervallo;
 let countdown;
-let cronometro;
 let rovescia;
 let t = 119;
 let acqua = 0;
@@ -35,18 +33,20 @@ let nPartita = 0;
 let divC = document.createElement("div");
 divC.classList.add("d-flex", "justify-content-center", "p-2", "m-2");
 document.body.append(divC);
+
 let p1 = document.createElement("p");
 p1.setAttribute("id", "cronometro");
-p1.classList.add("bg-dark", "text-center", "text-light", "border-3")
+p1.classList.add("bg-dark", "text-center", "text-light", "border-3");
 container.append(p1);
 
 // CONTO ALLA ROVESCIA
 let divR = document.createElement("div");
 divR.classList.add("d-flex", "justify-content-center", "p-2", "m-2");
 document.body.append(divR);
+
 let p2 = document.createElement("p");
 p2.setAttribute("id", "rovescia");
-p2.classList.add("bg-light", "text-center", "text-dark", "border-3")
+p2.classList.add("bg-light", "text-center", "text-dark", "border-3");
 container.append(p2);
 
 // GRIGLIA E FUNZIONAMENTO GIOCO
@@ -59,13 +59,17 @@ for (let i = 0; i < 10; i++) {
         col.classList.add("col", "p-0");
         row.append(col);
         let cella = document.createElement("div");
-        cella.setAttribute("id", "cella_" + i + "_" + j);
+        cella.setAttribute("id", "cella_" + i + "*" + j);
         cella.classList.add("h-100", "w-100", "border", "border-warning", "border-3", "p-3", "m-2");
         cella.addEventListener("click", function () {
+            if (termina == true) {
+                return;
+            }
             tent++;
             let coordinata = i + "-" + j;
+            cella.classList.add("animazione");
             if (nave1.includes(coordinata)) {
-                document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "red";
+                cella.style.backgroundColor = "red";
                 console.log("colpito");
                 cntN1++;
                 colpito++;
@@ -78,7 +82,7 @@ for (let i = 0; i < 10; i++) {
                 }
             }
             else if (nave2.includes(coordinata)) {
-                document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "green";
+                cella.style.backgroundColor = "green";
                 console.log("colpito");
                 cntN2++;
                 colpito++;
@@ -91,7 +95,7 @@ for (let i = 0; i < 10; i++) {
                 }
             }
             else if (nave3.includes(coordinata)) {
-                document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "orange";
+                cella.style.backgroundColor = "orange";
                 console.log("colpito");
                 cntN3++;
                 colpito++;
@@ -104,7 +108,7 @@ for (let i = 0; i < 10; i++) {
                 }
             }
             else if (nave4.includes(coordinata)) {
-                document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "white";
+                cella.style.backgroundColor = "white";
                 console.log("colpito");
                 cntN4++;
                 colpito++;
@@ -117,29 +121,24 @@ for (let i = 0; i < 10; i++) {
                 }
             }
             else {
-                document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "blue";
+                cella.style.backgroundColor = "blue";
                 console.log("acqua");
                 acqua++;
             }
             if (totNaviColpite === 4) {
-                if (termina == true) {
-                    document.getElementById("cella_" + i + "_" + j).classList.add("pe-none");
-                    document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "";
-                    return;
-                } else {
-                    termina = true;
-                    clearInterval(intervallo);
-                    clearInterval(countdown);
-                    intervallo = null;
-                    nPartita++;
-                    alert("Gioco completato, Hai vinto la battaglia navale! Schiacciare il pulsante nuova partita per rigiocare");
-                    console.log("I tentativi totali effettuati per completare il gioco sono stati: " + tent);
-                    console.log("Il tempo totale impiegato è: " + ore + ": ore " + min + ": minuti e " + sec + " secondi. Hai avanzato " + (t + 1) + " sec");
-                    visualizzaTabella();
-                    return;
-                }
+                termina = true;
+                clearInterval(intervallo);
+                clearInterval(countdown);
+                intervallo = null;
+                countdown = null;
+                nPartita++;
+                alert("Gioco completato, Hai vinto la battaglia navale! Schiacciare il pulsante nuova partita per rigiocare");
+                console.log("I tentativi totali effettuati per completare il gioco sono stati: " + tent);
+                console.log("Il tempo totale impiegato è: " + ore + ": ore " + min + ": minuti e " + sec + " secondi. Hai avanzato " + (t + 1) + " sec");
+                visualizzaTabella();
+                return;
             }
-            document.getElementById("cella_" + i + "_" + j).classList.add("pe-none");
+            cella.classList.add("pe-none");
         });
         col.append(cella);
     }
@@ -153,33 +152,38 @@ btnNuovaPartita.classList.add("btn", "btn-warning", "text-center", "text-dark", 
 btnNuovaPartita.textContent = "Nuova partita!";
 divBtn.append(btnNuovaPartita);
 
-
 // RIAVVIO PARTITA
 btnNuovaPartita.addEventListener("click", function () {
     alert("Reset del gioco!");
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
-            document.getElementById("cella_" + i + "_" + j).style.backgroundColor = "";
-            document.getElementById("cella_" + i + "_" + j).classList.remove("pe-none");
+            document.getElementById("cella_" + i + "*" + j).style.backgroundColor = "";
+            document.getElementById("cella_" + i + "*" + j).classList.remove("pe-none");
+            document.getElementById("cella_" + i + "*" + j).classList.remove("animazione");
         }
     }
     clearInterval(countdown);
     clearInterval(intervallo);
+    countdown = null;
+    intervallo = null;
     cntN1 = 0;
     cntN2 = 0;
     cntN3 = 0;
     cntN4 = 0;
     totNaviColpite = 0;
     ore = 0;
-    sec = 0;
     min = 0;
-    t = 0;
+    sec = 0;
+    t = 119;
     termina = false;
     tent = 0;
     acqua = 0;
     colpito = 0;
-    document.getElementById("cronometro").innerText = "" + ore + ": " + min + ". " + sec;
-    cronometro = setInterval(() => {
+    console.log("Partita numero " + (nPartita + 1) + " iniziata!");
+    console.log("Regole: devi affondare tutte e 4 le navi entro 120 secondi. Ogni cella può essere cliccata una sola volta.");
+    document.getElementById("cronometro").innerText = "" + ore + ": " + min + ": " + sec;
+    document.getElementById("rovescia").innerText = t;
+    intervallo = setInterval(() => {
         if (sec != 60)
             sec++;
         if (sec == 60) {
@@ -194,42 +198,60 @@ btnNuovaPartita.addEventListener("click", function () {
         }
         if (ore == 24)
             ore = 0;
-        document.getElementById("cronometro").innerText = "" + ore + ": " + min + ". " + sec;
+        document.getElementById("cronometro").innerText = "" + ore + ": " + min + ": " + sec;
     }, 1000);
-    let tempo = 119;
-    rovescia = setInterval(() => {
-        document.getElementById("rovescia").innerText = tempo;
-        if (tempo === 0) {
+
+    countdown = setInterval(() => {
+        document.getElementById("rovescia").innerText = t;
+        if (t === 0) {
+            termina = true;
+            nPartita++;
             alert("Hai perso! Il tempo è scaduto riprovare schiacciando su nuova partita!");
-            clearInterval(cronometro);
-            clearInterval(rovescia);
+            clearInterval(intervallo);
+            clearInterval(countdown);
+            intervallo = null;
+            countdown = null;
+            visualizzaTabella();
+            return;
         }
-        tempo--;
+        t--;
     }, 1000);
 });
 
 // INIZIALIZZAZIONE CRONOMETRO E CONTO ALLA ROVESCIA
 window.onload = function () {
+    console.log("Partita numero " + (nPartita + 1) + " iniziata!");
+    console.log("Regole: devi affondare tutte e 4 le navi entro 120 secondi. Ogni cella può essere cliccata una sola volta.");
     intervallo = setInterval(() => {
-        if (sec != 60) sec++;
+        if (sec != 60)
+            sec++;
         if (sec == 60) {
             sec = 0;
-            if (min != 60) min++;
+            if (min != 60)
+                min++;
         }
         if (min == 60) {
             min = 0;
-            if (ore != 24) ore++;
+            if (ore != 24)
+                ore++;
         }
-        if (ore == 24) ore = 0;
-        document.getElementById("cronometro").innerText = "" + ore + ": " + min + ". " + sec;
+        if (ore == 24)
+            ore = 0;
+        document.getElementById("cronometro").innerText = "" + ore + ": " + min + ": " + sec;
     }, 1000);
+
     countdown = setInterval(() => {
         document.getElementById("rovescia").innerText = t;
         if (t === 0) {
+            termina = true;
+            nPartita++;
             alert("Hai perso! Il tempo è scaduto riprovare schiacciando su nuova partita!");
             clearInterval(countdown);
             clearInterval(intervallo);
+            countdown = null;
+            intervallo = null;
             visualizzaTabella();
+            return;
         }
         t--;
     }, 1000);
@@ -238,7 +260,8 @@ window.onload = function () {
 function visualizzaTabella() {
     if (termina != true) {
         return;
-    } else {
+    }
+    else {
         let section = document.createElement("section");
         section.classList.add("container", "p-3");
         document.body.append(section);
@@ -275,7 +298,7 @@ function visualizzaTabella() {
         td3.classList.add("border", "border-dark", "border-3");
         td3.textContent = ore + ": ore " + min + ": minuti e " + sec + " secondi";
         trBody.append(td3);
-        let td4= document.createElement("td");
+        let td4 = document.createElement("td");
         td4.classList.add("border", "border-dark", "border-3");
         td4.textContent = colpito;
         trBody.append(td4);
